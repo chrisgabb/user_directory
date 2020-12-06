@@ -1,0 +1,73 @@
+import React from "react";
+// Using React Table as the library to handle the filter/search and the sort
+import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
+import { Col, Row, Table } from "reactstrap";
+import FancyTableRow from "./row";
+import FancyTableSearchBar from "./search";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
+
+const FancyTable = (props) => {
+
+	const {
+		getTableProps,
+		getTableBodyProps,
+		headerGroups,
+		prepareRow,
+		page,
+		preGlobalFilteredRows,
+		setGlobalFilter
+
+	} = useTable({
+		columns: props.headers,
+		data: props.rows,
+	},
+		useGlobalFilter,
+		useSortBy,
+		usePagination,
+	);
+
+	return (<>
+		<Row>
+			<Col>
+				<FancyTableSearchBar onChange={(e) => setGlobalFilter(e)} />
+			</Col>
+		</Row>
+		<Row className="mt-3">
+			<Col>
+				<h6>Found {preGlobalFilteredRows.length} Employee(s)</h6>
+			</Col>
+			<Col>
+				<h5>*Click the Column headings to Sort*</h5>
+			</Col>
+		</Row>
+		<Table bordered responsive hover className="mt-4" {...getTableProps()}>
+			<thead>
+				{headerGroups.map((headerGroup) => (
+					<tr key={0} {...headerGroup.getHeaderGroupProps}>
+
+						{headerGroup.headers.map((column) => (
+
+							<th {...column.getHeaderProps(column.getSortByToggleProps())}>
+								{column.render("Header")}
+								<span>
+									{column.isSorted ? (column.isSortedDesc ? (<FontAwesomeIcon icon={faArrowDown} />) : (<FontAwesomeIcon icon={faArrowUp} />)) : ''}
+								</span>
+							</th>
+
+						))}
+
+					</tr>
+				))}
+			</thead>
+			<tbody {...getTableBodyProps()}>
+				{page.map((row) => {
+					prepareRow(row);
+					return (<FancyTableRow key={row.original.email} row={row} />)
+				})}
+			</tbody>
+		</Table>
+	</>)
+};
+
+export default FancyTable
