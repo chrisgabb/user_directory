@@ -18,15 +18,6 @@ export function Layout() {
 
 		userService.fetchUsers().then(results => setTableRows(results))
 
-		/*API.pullData().then(res => res.data.results).then(res => res.map((e, index) => items.push(
-			{
-				id: index + 1,
-				firstName: e.name.first,
-				lastName: e.name.last,
-				email: e.email,
-				username: e.login.username
-			})))*/
-
 
 	}, [])
 
