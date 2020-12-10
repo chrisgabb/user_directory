@@ -1,12 +1,12 @@
 import React from "react";
 import {BrowserRouter as Router} from "react-router-dom";
-import {data} from './utils/API';
-import {Layout} from "./components/Layout";
+import { Layout } from "./components/Layout";
+import items from './components/FancyTable'
 
 class App extends React.Component {
 
 	state = {
-		data
+		items
 	}
 
 	handleSubmit(e) {
@@ -16,12 +16,12 @@ class App extends React.Component {
 	}
 
 	filterData = () => {
-		let filterList = data.filter(e => e === e.target.value)
+		let filterList = items.filter(e => e === e.target.value)
 		this.setState(filterList)
 
 	}
 	handleSort = () => {
-		let sortList = data.sort((a, b) => (a.department > b.department) ? 1 : -1)
+		let sortList = items.sort((a, b) => (a.department > b.department) ? 1 : -1)
 		this.setState(sortList)
 	}
 

@@ -1,67 +1,40 @@
+import axios from "axios";
 
-export const data = [
-    {
-        firstName: 'Tasha',
-        lastName: 'Micheal',
-        phoneNumber: '111715558978',
-        email: 't.micheal@dhg.com',
-        department: 'Sales',
-        region: 'EMEA',
-    },
-    {
-        firstName: 'Alex',
-        lastName: 'Johnson',
-        phoneNumber: '111735551902',
-        email: 'a.johnson82@dhg.com',
-        department: 'Corporate Tax',
-        region: 'EMEA',
-    },
-    {
-        firstName: 'James',
-        lastName: 'Murphy',
-        phoneNumber: '111725550293',
-        email: 'j.murphy98@dhg.com',
-        department: 'Sales',
-        region: 'EMEA',
-    },
-    {
-        firstName: 'Katherine',
-        lastName: 'Manascalco',
-        phoneNumber: '3155558190',
-        email: 'k.manascalco@dhg.com',
-        department: 'Legal',
-        region: 'LATAM',
-    },
-    {
-        firstName: 'Reginald',
-        lastName: 'Bane',
-        phoneNumber: '7185558210',
-        email: 'reggie.bane@dhg.com',
-        department: 'Finance',
-        region: 'US',
-    },
-    {
-        firstName: 'Chris',
-        lastName: 'Gabb',
-        phoneNumber: '7045558978',
-        email: 'c.gabb1@dhg.com',
-        department: 'IT',
-        region: 'US',
-    },
-    {
-        firstName: 'Alejandro',
-        lastName: 'Mescal',
-        phoneNumber: '3055558001',
-        email: 'a.mescal8@dhg.com',
-        department: 'Sales',
-        region: 'LATAM',
-    },
-    {
-        firstName: 'Maurice',
-        lastName: 'Rogers',
-        phoneNumber: '3055553214',
-        email: 'mj.rogers82@dhg.com',
-        department: 'IT',
-        region: 'LATAM',
-    },
-];
+export class UserAPI {
+
+    api = "https://randomuser.me/api/?results=500"
+
+    async fetchUsers() {
+
+    	// Create an empty collection
+        let results = [];
+
+        // Perform the API fetch
+        let response = await axios.get(this.api)
+
+	    // If the API fetch was successful, retrieve the result set
+        if (response.data != null && response.data.results != null)
+            results = response.data.results;
+
+        // Immediately return an empty literal if the result set is empty
+        if (results.length <= 0)
+        	return []
+
+	    // Convert the result set for table view
+	    return results.map((element, index) => {
+
+	        return {
+		        id: index + 1,
+		        firstName: element.name.first,
+		        lastName: element.name.last,
+		        email: element.email,
+		        username: element.login.username
+	        }
+
+        })
+
+    }
+
+}
+
+

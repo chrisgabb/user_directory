@@ -1,25 +1,34 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 // Using Reactstrap instead of Bootstrap
-import {Container, Fade, Jumbotron, Spinner} from "reactstrap";
-import {data} from "../../utils/API";
+import {Container, Fade, Jumbotron} from "reactstrap";
 import FancyTable from "../FancyTable";
 import Footer from "../Footer";
+import { UserAPI } from "../../utils/API";
+
+const items = []
+
+const userService = new UserAPI()
 
 // Have to use hooks as react-table requires the use of hooks for sorting
-export const Layout = (props) => {
+export function Layout() {
+
 	const [tableRows, setTableRows] = useState([]);
-	const [isLoading, setIsLoading] = useState(true);
 
-// Adding a setTimeout to make it look like this is performing a fetch. This is based on the "isLoading" state
-// that is initially set to true but then changes to false after 1.5 seconds
-	setTimeout(() => {
+	useEffect(() => {
 
-		setTableRows(data)
+		userService.fetchUsers().then(results => setTableRows(results))
 
-// Hide the spinner and show the data table
-		setIsLoading(false)
+		/*API.pullData().then(res => res.data.results).then(res => res.map((e, index) => items.push(
+			{
+				id: index + 1,
+				firstName: e.name.first,
+				lastName: e.name.last,
+				email: e.email,
+				username: e.login.username
+			})))*/
 
-	}, 1500)
+
+	}, [])
 
 	return (
 		<Container fluid={false}>
@@ -29,26 +38,22 @@ export const Layout = (props) => {
 				<hr className="my-2"/>
 				<p>This page allows you to access non-sensitive employee data.</p>
 			</Jumbotron>
-			{
-				isLoading ?
-					(<Spinner/>)
-					:
-					(<Fade>
-						<FancyTable
-							headers={[
-								{Header: "First Name", accessor: "firstName"},
-								{Header: "Last Name", accessor: "lastName"},
-								{Header: "Phone Number", accessor: "phoneNumber"},
-								{Header: "Email", accessor: "email"},
-								{Header: "Department", accessor: "department"},
-								{Header: "Region", accessor: "region"}
-							]}
-							rows={tableRows}
-						/>
-					</Fade>)
-			}
+			<Fade>
+				<FancyTable
+					headers={[
+						{Header: "First Name", accessor: "firstName"},
+						{Header: "Last Name", accessor: "lastName"},
+						{Header: "Phone Number", accessor: "phoneNumber"},
+						{Header: "Email", accessor: "email"},
+						{Header: "Username", accessor: "username"},
+					]}
+					rows={tableRows}
+				/>
+			</Fade>
 			<Footer/>
 		</Container>
 	)
 
 }
+
+export default Layout

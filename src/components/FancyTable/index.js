@@ -1,7 +1,7 @@
 import React from "react";
 // Using React Table as the library to handle the filter/search and the sort
 import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
-import { Col, Row, Table } from "reactstrap";
+import { Col, Input, Pagination, PaginationItem, PaginationLink, Row, Table } from "reactstrap";
 import FancyTableRow from "./row";
 import FancyTableSearchBar from "./search";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -15,8 +15,18 @@ const FancyTable = (props) => {
 		headerGroups,
 		prepareRow,
 		page,
+
+		canPreviousPage,
+		canNextPage,
+		pageCount,
+		gotoPage,
+		nextPage,
+		previousPage,
+		setPageSize,
+		state: { pageIndex, pageSize },
+
 		preGlobalFilteredRows,
-		setGlobalFilter
+		setGlobalFilter,
 
 	} = useTable({
 		columns: props.headers,
@@ -39,6 +49,23 @@ const FancyTable = (props) => {
 			</Col>
 			<Col>
 				<h5>*Click the Column headings to Sort*</h5>
+			</Col>
+		</Row>
+		<Row>
+			<Col xs={12} md={6} className="mt-2 mt-md-0">
+				<label>Show &nbsp;</label>
+				<label>
+					<Input type="select" bsSize="sm" value={pageSize} onChange={e => setPageSize(Number(e.target.value))}>
+						{[5, 10, 20, 30, 40, 50].map(size => (
+							<option key={size} value={size}>
+								{size}
+							</option>
+						))}
+					</Input>
+				</label>
+				<label>&nbsp; {props.resourcePluralName}</label>
+			</Col>
+			<Col xs={12} md={6} className="mt-3 mt-md-0 justify-content-sm-center justify-content-between">
 			</Col>
 		</Row>
 		<Table bordered responsive hover className="mt-4" {...getTableProps()}>
